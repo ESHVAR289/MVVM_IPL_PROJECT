@@ -11,6 +11,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import einfoplanet.com.ipl.utility.JSONParser;
+
 /**
  *  TeamDBHandler class is used to Handle the database operation of such as inserting the
  *  values into the database retrieving the particular data of the team from the database
@@ -141,33 +143,9 @@ public class TeamDBHandler extends SQLiteOpenHelper {
     public JSONArray getTeamInfoDatabase() {
         open();
         Cursor teamInfoData = getTeamData();
-        JSONArray jsonArray = convertToJsonArray(teamInfoData);
+        JSONArray jsonArray = JSONParser.convertToJsonArray(teamInfoData);
         teamInfoData.close();
         return jsonArray;
-    }
-
-    //converting Cursor data into Json Array
-    private JSONArray convertToJsonArray(Cursor cursor) {
-        JSONArray resultSet = new JSONArray();
-        cursor.moveToFirst();
-        while (!mCursor.isAfterLast()) {
-            int totalColumn = cursor.getColumnCount();
-            JSONObject rowObject = new JSONObject();
-            for (int i = 0; i < totalColumn; i++) {
-                if (cursor.getColumnName(i) != null) {
-                    try {
-                        rowObject.put(cursor.getColumnName(i),
-                                cursor.getString(i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            resultSet.put(rowObject);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return resultSet;
     }
 
 }
